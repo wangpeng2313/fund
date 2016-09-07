@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+ 
+<mapper namespace="com.javaetime.web.StaffInfo.dao.StaffDao">
+	
+	<resultMap id="BaseResultMap"  type="com.javaetime.entity.StaffEntity" >
+		<result column="Staff_ID" property="staffId" />
+		<result column="DEPT_ID" property="deptId" />
+		<result column="TestFile" property="testFile" />
+		<result column="Staff_NAME" property="staffName" />
+		<result column="SEX" property="sex" />
+		<result column="TEL" property="tel" />
+		<result column="EDUCATION" property="education" />
+		<result column="SCHOOL" property="school" />
+		<result column="GRADUATION_DATE" property="graduationDate" />
+		<result column="CARD_NO" property="cardNo" />
+		<result column="EMAIL" property="email" />
+		<result column="BANK_TYPE" property="bankType" />
+		<result column="BANK_NO" property="bankNo" />
+		<result column="PROVINCE" property="province" />
+		<result column="CITY" property="city" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="REMARK" property="remark" />
+		<association property="dept" javaType="DeptEntity" column="DEPT_ID" select="com.javaetime.web.DeptInfo.dao.DeptDao.detail"/>
+	</resultMap>
+	<insert id="addSave" parameterType="com.javaetime.entity.StaffEntity">
+		INSERT INTO staff_info(Staff_NAME,TestFile,DEPT_ID,SEX,TEL,EDUCATION,SCHOOL,GRADUATION_DATE,CARD_NO,EMAIL,BANK_TYPE,BANK_NO,PROVINCE,CITY,REMARK,CREATE_TIME)
+		VALUES(#{staffName},#{testFile},#{deptId},#{sex},#{tel},#{education},#{school},#{graduationDate},#{cardNo},#{email},#{bankType},#{bankNo},#{province},#{city},#{remark},now())
+	</insert>
+	<select id="queryTelNum" parameterType="com.javaetime.entity.StaffEntity" resultType="int">
+		SELECT COUNT(1) FROM staff_info WHERE TEL = #{tel}
+		<if test="staffId != 0">
+		AND	Staff_ID !=  #{staffId}
+		</if>
+	</select>
+	<select id="queryForPageList" parameterType="com.javaetime.web.StaffInfo.param.StaffParam" resultMap="BaseResultMap">
+		SELECT Staff_ID,Staff_NAME,TestFile,DEPT_ID,SEX,TEL,EDUCATION,SCHOOL,GRADUATION_DATE,CARD_NO,EMAIL,BANK_TYPE,BANK_NO,PROVINCE,CITY,REMARK,CREATE_TIME
+		FROM staff_info
+		
+		<if test="staffName != null and staffName!=''">
+		WHERE Staff_NAME LIKE '%${staffName}%'
+		</if>
+		
+	</select>
+	<select id="queryById" parameterType="long" resultMap="BaseResultMap">
+		SELECT Staff_ID,Staff_NAME,TestFile,DEPT_ID,SEX,TEL,EDUCATION,SCHOOL,GRADUATION_DATE,CARD_NO,EMAIL,BANK_TYPE,BANK_NO,PROVINCE,CITY,REMARK,CREATE_TIME
+		FROM staff_info
+		WHERE Staff_ID = #{id}
+	</select>
+	<select id="queryListByDeptId" parameterType="long" resultMap="BaseResultMap">
+		SELECT Staff_ID,Staff_NAME,DEPT_ID,SEX,TEL,EDUCATION,SCHOOL,GRADUATION_DATE,CARD_NO,EMAIL,BANK_TYPE,BANK_NO,PROVINCE,CITY,REMARK,CREATE_TIME
+		FROM staff_info
+		where DEPT_ID = #{deptId}
+	</select>
+	<update id="editSave" parameterType="com.javaetime.entity.StaffEntity">
+		UPDATE staff_info
+		SET Staff_NAME = #{staffName},TestFile=#{testFile},SEX = #{sex},TEL = #{tel},EDUCATION = #{education},SCHOOL = #{school},GRADUATION_DATE = #{graduationDate},
+		CARD_NO = #{cardNo},EMAIL = #{email},BANK_TYPE = #{bankType},BANK_NO = #{bankNo},PROVINCE = #{province},CITY = #{city},REMARK = #{remark}
+		WHERE Staff_ID = #{staffId}
+	</update>
+	<delete id="delete" parameterType="long">
+		DELETE FROM staff_info WHERE Staff_ID = #{staffId}
+	</delete>
+</mapper>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.javaetime.web.bankcard.dao.BankCardDao" >
+  <resultMap id="BaseResultMap" type="com.javaetime.entity.BankCardEntity" >
+    <id column="ACC_ID" property="accId" />
+    <result column="ACC_NO" property="accno"  />
+    <result column="ACC_PWD" property="accpwd" />
+    <result column="BANK_TYPE" property="bankType"  />
+    <result column="CLIENT_ID" property="id" />
+    <result column="CREATE_TIME" property="createtime" />
+    <result column="BLANCE" property="blance"  /> 
+    <result column="ACC_STATE" property="accstate"  /> 
+   <association property="client" javaType="ClientEntity" column="CLIENT_ID" select="com.javaetime.web.ClientInfo.dao.ClientDao.detail"/>
+  </resultMap>
+	<insert id="addSave" parameterType="com.javaetime.entity.BankCardEntity">
+		INSERT INTO bank_card(ACC_NO,ACC_PWD,BANK_TYPE,CLIENT_ID,CREATE_TIME,BLANCE,ACC_STATE)
+		VALUES(#{accno},#{accpwd},#{bankType},#{id},#{createtime},#{blance},#{accstate})
+	</insert>
+	<update id="editSave" parameterType="com.javaetime.entity.BankCardEntity">
+		update bank_card set  ACC_STATE=#{accstate}
+		where ACC_NO =#{accno} and ACC_PWD = #{accpwd}
+	</update>
+	<select id="queryForPageList" parameterType="com.javaetime.entity.BankCardEntity" resultMap="BaseResultMap">
+		SELECT ACC_ID,ACC_NO,ACC_PWD,BANK_TYPE,CLIENT_ID,CREATE_TIME,BLANCE,ACC_STATE
+		FROM bank_card
+		
+		<if test="accno != null and accno !=''">
+		WHERE ACC_NO LIKE '%${accno}%'
+		</if>
+		
+	</select>
+	<select id="queryById" resultType="int" parameterType="com.javaetime.entity.BankCardEntity" >
+		SELECT count(*)
+		FROM bank_card
+		<if test="accno != null and accno !=''">
+		WHERE ACC_NO =#{accno}
+		</if>
+		<if test="accpwd != null and accpwd !=''">
+		and ACC_PWD = #{accpwd}
+		</if>
+		
+	</select>
+	<select id="queryByIdList" parameterType="com.javaetime.entity.BankCardEntity" resultMap="BaseResultMap">
+		SELECT *
+		FROM bank_card where ACC_NO =#{accno} and ACC_PWD = #{accpwd}
+		
+	</select>
+	<delete id="deleteById" parameterType="long">
+ 	DELETE FROM bank_card  WHERE ACC_ID=#{accId}
+  	</delete>
+</mapper>

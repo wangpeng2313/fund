@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+<mapper namespace="com.javaetime.web.fundInfo.dao.FundInfoDao" >
+  <resultMap id="BaseResultMap" type="com.javaetime.entity.FundInfoEntity" >
+    <result column="F_ID" property="infoId"  />
+    <result column="F_ISSURE_ID" property="issueId" />
+    <result column="F_NAME" property="name" />
+    <result column="F_PRICE" property="price" />
+    <result column="F_DESCRIPTION" property="description" />
+    <result column="F_STATUS" property="status" />
+    <result column="REMARK" property="remark" />
+    <result column="CREATE_TIME" property="createTime"  />
+    	<association property="issue" javaType="IssueEntity" column="F_ISSURE_ID" select="com.javaetime.web.fundissue.dao.IssueDao.queryById"/>
+  </resultMap>
+  <insert id="addSave" parameterType="com.javaetime.entity.FundInfoEntity">
+		INSERT INTO fund_info(F_ISSURE_ID,F_NAME,F_PRICE,F_DESCRIPTION,F_STATUS,REMARK,CREATE_TIME)
+		VALUES(#{issueId},#{name},#{price},#{description},#{status},#{remark},now())
+	</insert>
+	<select id="queryForPageList" parameterType="com.javaetime.entity.FundInfoEntity" resultMap="BaseResultMap">
+		SELECT F_ID,F_ISSURE_ID,F_NAME,F_PRICE,F_DESCRIPTION,F_STATUS,REMARK,CREATE_TIME
+		FROM fund_info
+		
+		<if test="name != null and name!=''">
+		WHERE F_NAME LIKE '%${name}%'
+		</if>
+		
+	</select>
+	<select id="queryAll" resultMap="BaseResultMap">
+		SELECT F_ID,F_ISSURE_ID,F_NAME,F_PRICE,F_DESCRIPTION,F_STATUS,REMARK,CREATE_TIME
+		FROM fund_info
+	</select>
+	<select id="queryById" parameterType="int" resultMap="BaseResultMap">
+		SELECT F_ID,F_ISSURE_ID,F_NAME,F_PRICE,F_DESCRIPTION,F_STATUS,REMARK,CREATE_TIME
+		FROM fund_info
+		WHERE F_ID = #{infoId}
+	</select>
+	<update id="editSave" parameterType="com.javaetime.entity.FundInfoEntity">
+		UPDATE fund_info
+		SET F_NAME = #{name},F_PRICE = #{price},F_DESCRIPTION = #{description},F_STATUS = #{status},REMARK = #{remark}
+		WHERE F_ID = #{infoId}
+	</update>
+	<delete id="delete" parameterType="long">
+		DELETE FROM fund_info WHERE F_ID = #{infoId}
+	</delete>
+  </mapper>

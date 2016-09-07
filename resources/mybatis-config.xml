@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	<settings>
+		<setting name="cacheEnabled" value="false" />
+		<setting name="lazyLoadingEnabled" value="false" />
+		<setting name="multipleResultSetsEnabled" value="true" />
+		<setting name="useColumnLabel" value="true" />
+		<setting name="defaultExecutorType" value="REUSE" />
+		<setting name="defaultStatementTimeout" value="25000" />
+	</settings>
+	<typeAliases>
+		<typeAlias type="com.javaetime.entity.User" alias="user" />
+		<typeAlias type="com.javaetime.entity.DictionaryEntity" alias="dictionaryEntity"/>
+
+		<typeAlias type="com.javaetime.entity.ClientEntity" alias="clientEntity" />
+		<typeAlias type="com.javaetime.entity.DeptEntity" alias="deptEntity" />
+
+		<typeAlias type="com.javaetime.entity.StaffEntity" alias="staffEntity"/>
+		<typeAlias type="com.javaetime.entity.IssueEntity" alias="issueEntity"/>
+		<typeAlias type="com.javaetime.entity.FundAccountEntity" alias="fundAccountEntity"/>
+		
+		<typeAlias type="com.javaetime.entity.FundHoldingEntity" alias="fundHoldingEntity"/>
+		<typeAlias type="com.javaetime.entity.FundInfoEntity" alias="fundInfoEntity"/>
+        <typeAlias type="com.javaetime.entity.TransactionInfoEntity" alias="transactionInfoEntity" />
+		<typeAlias type="com.javaetime.entity.BankCardEntity" alias="bankCardEntity"/>
+		<typeAlias type="com.javaetime.entity.PositionEntity" alias="positionEntity"/>
+
+		<typeAlias type="com.javaetime.entity.TransactionRecordEntity" alias="transactionRecordEntity"/>
+		
+	</typeAliases>
+	<!-- 必须放到settings下面 分页拦截器-->
+	<plugins>
+		<plugin
+			interceptor="com.github.miemiedev.mybatis.paginator.OffsetLimitInterceptor">
+			<property name="dialectClass"
+				value="com.github.miemiedev.mybatis.paginator.dialect.MySQLDialect" />
+		</plugin>
+	</plugins>
+
+	<mappers>
+		<!-- 公共信息    -->
+		
+		<mapper resource="mybatisMappers/UserMapper.xml" />
+
+		<mapper resource="mybatisMappers/StaffMapper.xml" />
+		<mapper resource="mybatisMappers/DeptMapper.xml" />
+		<mapper resource="mybatisMappers/Dictionary.xml" />
+		<mapper resource="mybatisMappers/ClientMapper.xml" />
+		<mapper resource="mybatisMappers/IssueMapper.xml" />
+
+		<mapper resource="mybatisMappers/FundAccount.xml" />
+
+
+		<mapper resource="mybatisMappers/FundInfoMapper.xml" />
+
+		<mapper resource="mybatisMappers/PositionMapper.xml" />
+		<mapper resource="mybatisMappers/TransactionInfoMapper.xml" />
+
+		<mapper resource="mybatisMappers/TransactionRecordMapper.xml" />
+		<mapper resource="mybatisMappers/FundHoldingMapper.xml" />
+		<mapper resource="mybatisMappers/BankCardMapper.xml" />
+
+	</mappers>
+
+</configuration>

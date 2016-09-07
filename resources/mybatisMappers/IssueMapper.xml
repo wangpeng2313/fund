@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+
+<mapper namespace="com.javaetime.web.fundissue.dao.IssueDao">
+	
+	<resultMap id="BaseResultMap"  type="com.javaetime.entity.IssueEntity" >
+		<result column="F_ISSURE_ID" property="issueId" />
+		<result column="F_ISSURE_Name" property="issueName" />
+		<result column="PHONE" property="phone" />
+		<result column="REMARK" property="remark" />
+		<result column="CREATE_TIME" property="createTime" />
+	</resultMap>
+	
+	
+	<insert id="addSave" parameterType="com.javaetime.entity.IssueEntity">
+		INSERT INTO fund_issue(F_ISSURE_Name,PHONE,REMARK,CREATE_TIME)
+		VALUES(#{issueName},#{phone},#{remark},now())
+	</insert>
+	
+	<select id="queryTelNum" parameterType="com.javaetime.entity.IssueEntity" resultType="int">
+		SELECT COUNT(1) FROM fund_issue WHERE PHONE = #{phone}
+		<if test="issueId != 0">
+		AND	F_ISSURE_ID !=  #{issueId}
+		</if>
+	</select>
+
+	<select id="queryForPageList" parameterType="com.javaetime.web.fundissue.param.IssueParam" resultMap="BaseResultMap">
+		SELECT F_ISSURE_ID,F_ISSURE_Name,PHONE,REMARK,CREATE_TIME
+		FROM fund_issue
+		
+		<if test="issueName != null and issueName!=''">
+		WHERE F_ISSURE_Name LIKE '%${issueName}%'
+		</if>
+		
+	</select>
+	
+	<select id="queryById" parameterType="long" resultMap="BaseResultMap">
+		SELECT F_ISSURE_ID,F_ISSURE_Name,PHONE,REMARK,CREATE_TIME
+		FROM fund_issue
+		WHERE F_ISSURE_ID = #{issueId}
+	</select>
+	
+	<select id="queryAll" resultMap="BaseResultMap">
+		SELECT F_ISSURE_ID,F_ISSURE_Name,PHONE,REMARK,CREATE_TIME
+		FROM fund_issue
+	</select>
+	<delete id="deleteSave" parameterType="long">
+		DELETE FROM fund_issue WHERE F_ISSURE_ID = #{issueId}
+	</delete>
+	
+	<update id="editSave" parameterType="com.javaetime.entity.IssueEntity">
+		UPDATE fund_issue
+		SET F_ISSURE_Name = #{issueName},PHONE = #{phone},REMARK = #{remark}
+		WHERE F_ISSURE_ID = #{issueId}
+	</update>
+</mapper>

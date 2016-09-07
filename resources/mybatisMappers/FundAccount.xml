@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.javaetime.web.fundAccount.dao.FundAccountDao" >
+  <resultMap id="BaseResultMap" type="com.javaetime.entity.FundAccountEntity" >
+    <result column="A_ID" property="aId" />
+    <result column="CLIENT_ID" property="id"  />
+    <result column="A_CARD" property="aCard"  />
+    <result column="A_PWD" property="aPwd" />
+    <result column="A_MARGIN" property="aMargin" />
+    <result column="A_STATE" property="aState" />
+    <result column="CLIENT_CARD" property="clientCard"  />
+    <result column="REMARK" property="remark" /> 
+    <result column="CREATE_TIME" property="createTime"  /> 
+    <association property="clientEntity" javaType="ClientEntity" column="CLIENT_ID" 
+    select="com.javaetime.web.ClientInfo.dao.ClientDao.detail"/>
+  </resultMap>
+ 	<select id="queryForList"  resultMap="BaseResultMap">
+		SELECT * FROM  ACCOUNTS
+		<if test="aCard!='' and aCard!=null">
+		WHERE A_CARD LIKE '%${aCard}%'
+		</if>
+		
+	</select>
+	<select id="queryById" parameterType="int" resultMap="BaseResultMap">
+		SELECT *
+		FROM ACCOUNTS
+		WHERE A_ID=#{aId}
+	</select>
+	 <delete id="deleteSave" parameterType="int">
+ DELETE FROM ACCOUNTS  WHERE A_ID=#{aId}
+     </delete>
+	
+	<insert id="addSave" parameterType="com.javaetime.entity.FundAccountEntity">
+INSERT INTO ACCOUNTS(CLIENT_ID,A_CARD,A_PWD,A_MARGIN,A_STATE,REMARK,CREATE_TIME)
+VALUES(#{id},#{aCard},#{aPwd},#{aMargin},#{aState},#{remark},#{createTime})
+   </insert>
+	<update id="update" parameterType="com.javaetime.entity.FundAccountEntity">
+		update ACCOUNTS set A_MARGIN=#{aMargin} where A_ID=#{aId}
+   </update>
+   <update id="editSave" parameterType="com.javaetime.entity.FundAccountEntity">
+		UPDATE ACCOUNTS
+		SET A_CARD = #{aCard},A_PWD = #{aPwd},A_MARGIN = #{aMargin},A_STATE = #{aState},
+		REMARK=#{remark},CREATE_TIME=#{createTime}
+		WHERE A_ID=#{aId}
+	</update>
+	<select id="queryAll" resultMap="BaseResultMap">
+		SELECT * FROM  ACCOUNTS
+	</select>
+  </mapper>

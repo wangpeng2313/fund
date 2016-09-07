@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.javaetime.web.DeptInfo.dao.DeptDao" >
+  <resultMap id="BaseResultMap" type="com.javaetime.entity.DeptEntity" >
+    <id column="DEPT_ID" property="deptId" jdbcType="BIGINT" />
+    <result column="DEPT_NAME" property="deptName" jdbcType="VARCHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <collection property="staff" column="DEPT_ID" select="com.javaetime.web.StaffInfo.dao.StaffDao.queryListByDeptId"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    deptId,deptName,remark,createTime
+  </sql>
+  <select id="queryForPageList" resultMap="BaseResultMap" parameterType="com.javaetime.web.DeptInfo.param.DeptParam" >
+    SELECT * FROM DEPT
+    <if test='deptName!=null and deptName!=""'>
+  where DEPT_NAME like '%${deptName}%'
+  </if>
+  </select>
+  
+  <select id="queryById" parameterType="com.javaetime.entity.DeptEntity" resultMap="BaseResultMap">
+    SELECT * FROM DEPT WHERE DEPT_ID=#{deptId}
+  </select>
+  <select id="queryAll" resultMap="BaseResultMap">
+		SELECT * FROM DEPT
+	</select>
+	<select id="queryAllInfo" resultType="java.util.HashMap">
+		SELECT * FROM DEPT
+	</select>
+  <select id="detail" resultMap="BaseResultMap" parameterType="long">
+		SELECT *
+		FROM DEPT
+		WHERE DEPT_ID=#{deptId}
+	</select>
+  <insert id="addSave" parameterType="com.javaetime.entity.DeptEntity">
+    INSERT INTO DEPT  VALUES(#{deptId},#{deptName},#{remark},#{createTime})
+  </insert>
+  <delete id="delete" parameterType="com.javaetime.entity.DeptEntity">
+  DELETE FROM DEPT WHERE DEPT_ID=#{deptId}
+  </delete>
+  
+  <update id="edit" parameterType="com.javaetime.entity.DeptEntity">
+   UPDATE DEPT SET DEPT_NAME=#{deptName},REMARK=#{remark},CREATE_TIME=#{createTime} WHERE DEPT_ID=#{deptId}
+  </update>
+</mapper>

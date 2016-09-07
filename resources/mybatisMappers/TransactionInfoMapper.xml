@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.javaetime.web.transactionInfo.dao.TransactionInfoDao" >
+  <resultMap id="BaseResultMap" type="com.javaetime.entity.TransactionInfoEntity" >
+    <id column="R_ID" property="rid" jdbcType="BIGINT" />
+    <result column="A_ID" property="aId" jdbcType="BIGINT" />
+    <result column="R_DATE" property="rdate" jdbcType="TIMESTAMP" />
+    <result column="R_TYPE" property="rtype" jdbcType="BIGINT" />
+    <result column="R_ORDER_ID" property="roid" jdbcType="BIGINT" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="VARCHAR" />
+     <association property="fundAccount" javaType="FundAccountEntity" column="A_ID" 
+    select="com.javaetime.web.fundAccount.dao.FundAccountDao.queryById"/>
+  </resultMap>
+  <select id="queryForPageList" resultMap="BaseResultMap">
+     SELECT * FROM TRANSACTION_INFO
+     <if test="aId != null and aId!=''">
+		WHERE A_ID LIKE '%${aId}%'
+		</if>
+  </select>
+  <insert id="addSave" parameterType="com.javaetime.entity.TransactionInfoEntity">
+   INSERT INTO TRANSACTION_INFO(A_ID,R_DATE,R_TYPE,R_ORDER_ID,REMARK,CREATE_TIME)
+   VALUES (#{aId},#{rdate},#{rtype},#{roid},#{remark},#{createTime})
+  </insert>
+  <delete id="deleteSave" parameterType="int">
+  delete from TRANSACTION_INFO where R_ID=#{rid}
+  </delete>
+  
+  <select id="detail" parameterType="com.javaetime.entity.TransactionInfoEntity" resultMap="BaseResultMap">
+  SELECT * FROM TRANSACTION_INFO WHERE R_ID = #{rid}
+  </select>
+  </mapper>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.javaetime.web.fundHolding.dao.FundHoldingDao" >
+  <resultMap id="BaseResultMap" type="com.javaetime.entity.FundHoldingEntity" >
+    <result column="HID" property="hId" jdbcType="BIGINT" />
+    <result column="F_ID" property="infoId" jdbcType="BIGINT" />
+    <result column="A_ID" property="aId" jdbcType="BIGINT" />    
+    <result column="AMOUNT" property="amount" jdbcType="VARCHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="VARCHAR" />
+    <association property="fundInfoEntity" javaType="FundInfoEntity" column="F_ID" 
+    select="com.javaetime.web.fundInfo.dao.FundInfoDao.queryById"/>
+    <association property="fundAccountEntity" javaType="FundAccountEntity" column="A_ID" 
+    select="com.javaetime.web.fundAccount.dao.FundAccountDao.queryById"/>
+  </resultMap>
+  
+  <select id="queryAll" resultMap="BaseResultMap" parameterType="com.javaetime.entity.FundHoldingEntity">
+  	select * from fund_holding
+  </select>
+  <select id="queryById" resultMap="BaseResultMap" parameterType="int">
+  	select * from fund_holding where HID=#{hId}
+  </select>
+  <select id="queryTelNum" resultType="int" parameterType="com.javaetime.entity.FundHoldingEntity">
+  	select count(*) from fund_holding where F_ID=#{infoId} and A_ID=#{aId}
+  </select>
+  <insert id="addSave" parameterType="com.javaetime.entity.FundHoldingEntity">
+  	insert into fund_holding(F_ID,A_ID,AMOUNT,REMARK,CREATE_TIME)
+  	values(#{infoId},#{aId},#{amount},#{remark},#{createTime})
+  </insert>
+  <delete id="delete" parameterType="int">
+  	delete from fund_holding where HID=#{hId}
+  </delete>
+  <update id="editSave" parameterType="com.javaetime.entity.FundHoldingEntity">
+  	update fund_holding set AMOUNT=#{amount},REMARK=#{remark},CREATE_TIME=#{createTime} where HID=#{hId} 
+   </update>
+  
+</mapper>

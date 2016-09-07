@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.javaetime.web.Position.dao.PositionDao">
+	<resultMap type="com.javaetime.entity.PositionEntity" id="BaseResultMap">
+		<id column="POSITION_ID" property="positionId" jdbcType="BIGINT" />
+	    <result column="POSITION_NAME" property="positionName" jdbcType="VARCHAR" />
+	    <result column="WAGE" property="wage" jdbcType="BIGINT" />
+	    <result column="SUBSIDY_WAGE" property="subsidyWage" jdbcType="BIGINT" />
+	    <result column="REMARK" property="remark" jdbcType="VARCHAR" /> 
+	    <result column="CREATE_TIME" property="createTime" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="queryForPageList" resultMap="BaseResultMap" parameterType="com.javaetime.web.Position.param.PositionParam">
+		select * from POSITION
+		<if test="positionName!= null and positionName!=''">
+		WHERE POSITION_NAME LIKE '%${positionName}%'
+		</if>
+	</select>
+	
+	<select id="queryTelNum" parameterType="com.javaetime.web.Position.param.PositionParam" resultType="int">
+		select count(*) from POSITION where POSITION_NAME=#{positionName}
+	</select>
+	
+	<select id="detail" parameterType="int" resultMap="BaseResultMap">
+		select * from POSITION where POSITION_ID=#{positionId}
+	</select>
+	<insert id="addSava" parameterType="com.javaetime.entity.PositionEntity">
+		insert into `position`(POSITION_NAME,WAGE,SUBSIDY_WAGE,REMARK,CREATE_TIME) 
+		values(#{positionName},#{wage},#{subsidyWage},#{remark},#{createTime})
+	</insert>
+	
+	<update id="editSave" parameterType="com.javaetime.entity.PositionEntity">
+		update `position` set POSITION_NAME=#{positionName},WAGE=#{wage},SUBSIDY_WAGE=#{subsidyWage},REMARK=#{remark},CREATE_TIME=#{createTime} where POSITION_ID=#{positionId} 
+	</update>
+	
+	<delete id="delete" parameterType="int">
+		delete from `position` where POSITION_ID=#{positionId} 
+	</delete>
+</mapper>

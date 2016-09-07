@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.javaetime.web.dictionary.dao.DictionaryDao">
+	<resultMap type="com.javaetime.entity.DictionaryEntity" id="BaseResultMap">
+		<id column="DICTIONARY_ID" property="dictionaryId" jdbcType="BIGINT" />
+	    <result column="TYPE_CODE" property="typeCode" jdbcType="VARCHAR" />
+	    <result column="DICTIONARY_KEY" property="key" jdbcType="VARCHAR" />
+	    <result column="DICTIONARY_VALUE" property="value" jdbcType="VARCHAR" />
+	    <result column="PARENT_ID" property="parentId" jdbcType="BIGINT" />
+	    <result column="SORT" property="sort" jdbcType="BIGINT" /> 
+	    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="queryForPageList" resultMap="BaseResultMap" parameterType="com.javaetime.web.dictionary.param.DictionaryParam.DictionaryParam">
+		SELECT * FROM DICTIONARY
+		<if test="typeCode!= null and typeCode!=''">
+		WHERE TYPE_CODE LIKE '%${typeCode}%'
+		</if>
+	</select>
+	<select id="detail" resultMap="BaseResultMap" parameterType="int">
+		SELECT * FROM DICTIONARY where DICTIONARY_ID=#{dictionaryId}
+	</select>
+	
+	<select id="queryList" resultMap="BaseResultMap" parameterType="com.javaetime.entity.DictionaryEntity">
+		SELECT * FROM DICTIONARY WHERE TYPE_CODE = #{typeCode}
+		<if test="parentId > 0">
+			AND PARENT_ID = #{parentId}
+		</if>
+		<if test="parentId == -1">
+			AND PARENT_ID = -1
+		</if>
+		ORDER BY SORT DESC,DICTIONARY_ID
+	</select>
+	<select id="queryForCityList" resultMap="BaseResultMap" parameterType="long">
+		SELECT * FROM DICTIONARY WHERE PARENT_ID = #{parentId} ORDER BY SORT DESC,DICTIONARY_ID
+	</select>
+	
+	<select id="queryTelNum" resultType="int" parameterType="com.javaetime.entity.DictionaryEntity">
+		SELECT count(*) FROM DICTIONARY WHERE TYPE_CODE = #{typeCode} AND DICTIONARY_KEY=#{key}
+	</select>
+	
+	<insert id="addSave" parameterType="com.javaetime.entity.DictionaryEntity">
+		INSERT INTO DICTIONARY(TYPE_CODE,DICTIONARY_KEY,DICTIONARY_VALUE,PARENT_ID,SORT,REMARK) 
+		VALUES(#{typeCode},#{key},#{value},#{parentId},#{sort},#{remark})
+	</insert>
+	
+	<delete id="delete" parameterType="int"> 
+		delete from DICTIONARY where DICTIONARY_ID=#{dictionaryId}
+	</delete>
+	
+	<update id="editSave" parameterType="com.javaetime.entity.DictionaryEntity">
+		update DICTIONARY set TYPE_CODE=#{typeCode},DICTIONARY_KEY=#{key},DICTIONARY_VALUE=#{value},PARENT_ID=#{parentId},SORT=#{sort},REMARK=#{remark} where DICTIONARY_ID=#{dictionaryId} 
+	</update>
+</mapper>

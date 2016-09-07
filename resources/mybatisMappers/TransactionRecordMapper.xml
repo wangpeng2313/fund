@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+<mapper namespace="com.javaetime.web.transactionRecord.dao.TransactionRecordDao" >
+  <resultMap id="BaseResultMap" type="com.javaetime.entity.TransactionRecordEntity" >
+    <result column="T_R_ID" property="trId"  />
+    <result column="A_ID" property="aId" />
+    <result column="F_ID" property="infoId" />
+    <result column="T_R_TYPE" property="trType" />
+    <result column="T_R_AMOUNT" property="trAmount" />
+    <result column="T_R_PRICE" property="trPrice" />
+    <result column="T_R_TIME" property="trTime" />
+    <result column="REMARK" property="remark"  />
+    	<association property="fundAccountEntity" javaType="FundAccountEntity" column="A_ID" select="com.javaetime.web.fundAccount.dao.FundAccountDao.queryById"/>
+    	<association property="fundInfoEntity" javaType="FundInfoEntity" column="F_ID" select="com.javaetime.web.fundInfo.dao.FundInfoDao.queryById"/>
+  </resultMap>
+  <insert id="addSave" parameterType="com.javaetime.entity.TransactionRecordEntity">
+		INSERT INTO transaction_record(A_ID,F_ID,T_R_TYPE,T_R_AMOUNT,T_R_PRICE,T_R_TIME,REMARK)
+		VALUES(#{aId},#{infoId},#{trType},#{trAmount},#{trPrice},#{trTime},#{remark})
+	</insert>
+	<select id="queryForPageList" parameterType="com.javaetime.entity.TransactionRecordEntity" resultMap="BaseResultMap">
+		SELECT T_R_ID,A_ID,F_ID,T_R_TYPE,T_R_AMOUNT,T_R_PRICE,T_R_TIME,REMARK
+		FROM transaction_record
+		
+		<if test="trId != null and trId!=''">
+		WHERE T_R_ID LIKE '%${trId}%'
+		</if>
+		
+	</select>
+	<select id="queryAll" resultMap="BaseResultMap">
+		SELECT T_R_ID,A_ID,F_ID,T_R_TYPE,T_R_AMOUNT,T_R_PRICE,T_R_TIME,REMARK
+		FROM transaction_record
+	</select>
+	<select id="queryById" parameterType="int" resultMap="BaseResultMap">
+		SELECT T_R_ID,A_ID,F_ID,T_R_TYPE,T_R_AMOUNT,T_R_PRICE,T_R_TIME,REMARK
+		FROM transaction_record
+		WHERE T_R_ID = #{trId}
+	</select>
+	<update id="editSave" parameterType="com.javaetime.entity.TransactionRecordEntity">
+		UPDATE transaction_record
+		SET T_R_AMOUNT = #{trAmount},T_R_PRICE = #{trPrice},T_R_TIME = #{trTime},REMARK = #{remark}
+		WHERE T_R_ID = #{trId}
+	</update>
+	<delete id="delete" parameterType="long">
+		DELETE FROM transaction_record WHERE T_R_ID = #{trId}
+	</delete>
+  </mapper>
